@@ -1,10 +1,12 @@
 package com.api.products.rest;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +48,18 @@ public class ProductsREST {
 		List<Product> products = productDAO.findAll();
 		return ResponseEntity.ok(products);
 	}
-	
+
+//
+	@RequestMapping(value="{productId}") //    /products/{productId}
+	public ResponseEntity<Product> getProductById(@PathVariable("productId")Long productId){
+		//It will protect you of null values
+		Optional<Product> optionalProduct = productDAO.findById(productId);
+		if (optionalProduct.isPresent()) {
+			return ResponseEntity.ok(optionalProduct.get());
+		}else {			
+			return ResponseEntity.noContent().build();
+		}
+		}
 	
 	
 	//Find pid of specific port
